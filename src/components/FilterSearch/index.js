@@ -6,21 +6,19 @@ import { debounce, noop } from "lodash";
 class FilterSearch extends React.PureComponent {
 
   static propTypes = {
+    filter: PropTypes.string,
     filters: PropTypes.arrayOf(PropTypes.shape({})),
     onChange: PropTypes.func,
     onSelect: PropTypes.func
   }
 
   static defaultProps = {
+    filterName: "",
     filters: [],
     onChange: noop,
     onSelect: noop
   }
 
-  constructor(props) {
-    super();
-    this.handleOnChange = debounce(event => this.handleOnChange(event), 300);
-  }
 
   prepareFilter = filter => (<MenuItem key={filter.id} onSelect={this.handleOnSelect(filter.id)}>{filter.name}</MenuItem>);
 
@@ -28,28 +26,19 @@ class FilterSearch extends React.PureComponent {
 
   handleOnChange = event => {
     event.persist();
-    this.props.onChange(event.target.value);
+    debounce(() => this.props.onChange(event.target.value), 1000)();
   }
 
-  getFilterName = () => {
-    const { props: { filters } } = this;
-    if (Array.isArray(filters) && filters.length) {
-      
-    }
-    return "";
-  } 
-
   render() {
-    const { getFilterName, handleOnChange, handleOnSelect, prepareFilter, props: { filters } } = this;
+    const { handleOnChange, prepareFilter, props: { filterName, filters } } = this;
     return (
       <FormGroup>
         <InputGroup>
-          <FormControl onChange={handleOnChange()} type="text" />
+          <FormControl onChange={handleOnChange} type="text" />
           <DropdownButton
             componentClass={InputGroup.Button}
             id="selected-filter"
-            title={getFilterName()}
-            onSelect={handleOnSelect}
+            title={filterName || "Select Filter"}
           >
             {filters.map(prepareFilter)}
           </DropdownButton>

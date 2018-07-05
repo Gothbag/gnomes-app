@@ -20,8 +20,13 @@ const initialState = {
 const filter = (state = {}, action) => {
 	switch (action.type) {
 		case listActions.SET_LIST_FILTER_VALUE:
+			if (state.value === action.value) {
+				return state;
+			}
+			console.log({...state, value: action.value})
 			return {...state, value: action.value};
 		case listActions.SET_LIST_FILTER_BY:
+			console.log({...state, filterBy: action.filterBy})
 			return {...state, filterBy: action.filterBy};
 		default:
 			return state;
@@ -34,17 +39,15 @@ const elementLists = (state = initialState, action) => {
 		return state;
 	}
 	const elementList = state[action.listId];
-
 	switch (action.type) {
 		case listActions.SET_LIST_ELEMENTS:
-			console.log([...action.payload])
 			return {...state, [action.listId]: {...elementList, elements: [...action.payload]}};
 
 		case listActions.SET_LIST_FILTER_BY:
 		case listActions.SET_LIST_FILTER_VALUE:
-			return {...state, [action.listId]: {...elementList, filter: filter(state.filter, action)}};
+			return {...state, [action.listId]: {...elementList, filter: filter(elementList.filter, action)}};
 		case listActions.SET_LIST_FILTERS:
-			return {...state, [action.listId]: {...elementList, filters: [...action.payload]}};
+			return {...state, [action.listId]: {...elementList, filters: [...elementList.filters, ...action.payload]}};
 		default:
 			return state;
 	}

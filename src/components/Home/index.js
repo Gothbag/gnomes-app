@@ -4,15 +4,16 @@ import { isEmpty } from "lodash";
 
 import FilterSearch from "../FilterSearch";
 import GnomeItem from "../GnomeItem";
+import Paginator from "../Paginator";
 
 class Home extends React.PureComponent {
 
 	static propTypes = {
-    gnomes: PropTypes.arrayOf(PropTypes.shape({}))
+    	gnomes: PropTypes.arrayOf(PropTypes.shape({}))
 	}
 
 	static defaultProps = {
-    gnomes: []
+    	gnomes: []
 	}
 
 	componentDidMount() {
@@ -25,14 +26,12 @@ class Home extends React.PureComponent {
 		}
 	}
 
-	prepareGnome = gnome => <GnomeItem {...gnome} key={gnome.id}/>;
-
 	render() {
-		const { prepareGnome, props: { filterBy, filters, gnomes, setGnomeFilterValue, setGnomeFilterBy } } = this;
+		const { props: { filterName, filters, gnomes, setGnomeFilterValue, setGnomeFilterBy } } = this;
 		return (<div>
-			<FilterSearch onChange={setGnomeFilterValue} filters={filters} filterBy={filterBy} onSelect={setGnomeFilterBy}/>
+			<FilterSearch onChange={setGnomeFilterValue} filters={[...filters, {name:"None", id:""}]} filterName={filterName} onSelect={setGnomeFilterBy}/>
 			<ul>		
-				{gnomes.map(prepareGnome)}
+				<Paginator elements={gnomes} elementItem={GnomeItem}/>
 			</ul>
 		</div>);
 	}
