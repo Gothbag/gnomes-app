@@ -1,26 +1,28 @@
 import React from "react";
 import { DropdownButton, FormControl, FormGroup, InputGroup, MenuItem } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { debounce, noop } from "lodash";
+import { debounce, filter, noop } from "lodash";
 
 class FilterSearch extends React.PureComponent {
 
   static propTypes = {
-    filter: PropTypes.string,
+    defaultTitle: PropTypes.string,
+    filterBy: PropTypes.string,
     filters: PropTypes.arrayOf(PropTypes.shape({})),
     onChange: PropTypes.func,
     onSelect: PropTypes.func
   }
 
   static defaultProps = {
-    filterName: "",
+    defaultTitle: "Select Filter",
+    filterBy: "",
     filters: [],
     onChange: noop,
     onSelect: noop
   }
 
 
-  prepareFilter = filter => (<MenuItem key={filter.id} onSelect={this.handleOnSelect(filter.id)}>{filter.name}</MenuItem>);
+  prepareFilter = filter => (<MenuItem key={filter.id} onSelect={this.handleOnSelect(filter.id)} active={filter.id === this.props.filterBy}>{filter.name}</MenuItem>);
 
   handleOnSelect = id => () => this.props.onSelect(id);
 
@@ -29,8 +31,19 @@ class FilterSearch extends React.PureComponent {
     debounce(() => this.props.onChange(event.target.value), 1000)();
   }
 
+  getFilterName = () => {
+    const { props: { defaultTitle, filters, filterBy } } = this;
+    if (Array.isArray(filters) && filters.length) {
+      const selectedFilt = filter(filters, filt => filt.id === filterBy);
+      if (selectedFilt.length) {
+        return selectedFilt[0].name;
+      }
+    }
+    return defaultTitle;
+  }
+
   render() {
-    const { handleOnChange, prepareFilter, props: { filterName, filters } } = this;
+    const { getFilterName, handleOnChange, prepareFilter, props: { filters } } = this;
     return (
       <FormGroup>
         <InputGroup>
@@ -38,7 +51,7 @@ class FilterSearch extends React.PureComponent {
           <DropdownButton
             componentClass={InputGroup.Button}
             id="selected-filter"
-            title={filterName || "Select Filter"}
+            title={getFilterName()}
           >
             {filters.map(prepareFilter)}
           </DropdownButton>

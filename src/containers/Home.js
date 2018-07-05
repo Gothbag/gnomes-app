@@ -4,14 +4,14 @@ import Home from "../components/Home";
 import { setFilterBy, setFilters, setFilterValue } from "../actions/lists";
 import { loadGnomes } from "../actions/gnomes";
 import { listConsts } from "../reducers/lists";
-import { filteredListSelector, filterNameSelector } from "../selectors";
+import { filteredListSelector } from "../selectors";
 
 const { GNOMES } = listConsts;
 
 const mapStateToProps = state => {
-	const { lists: { [GNOMES]: { filters } } } = state;
+	const { lists: { [GNOMES]: { filter, filters } } } = state;
 	return {
-		filterName: filterNameSelector(GNOMES)(state),
+		filterBy: filter.filterBy,
 		filters,
 	    gnomes: filteredListSelector(GNOMES)(state)
 	}; 

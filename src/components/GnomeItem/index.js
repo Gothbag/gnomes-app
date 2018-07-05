@@ -17,7 +17,7 @@ class Home extends React.PureComponent {
 	render() {
 		const { props: { age, height, name, thumbnail } } = this;
 
-		return (<li>
+		return (<li className="gnome-item">
 			<Panel>
 				<Panel.Heading>
 		      		<Panel.Title componentClass="h3" toggle>{name}</Panel.Title>

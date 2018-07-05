@@ -27,9 +27,9 @@ class Home extends React.PureComponent {
 	}
 
 	render() {
-		const { props: { filterName, filters, gnomes, setGnomeFilterValue, setGnomeFilterBy } } = this;
+		const { props: { filterBy, filters, gnomes, setGnomeFilterValue, setGnomeFilterBy } } = this;
 		return (<div>
-			<FilterSearch onChange={setGnomeFilterValue} filters={[...filters, {name:"None", id:""}]} filterName={filterName} onSelect={setGnomeFilterBy}/>
+			<FilterSearch onChange={setGnomeFilterValue} filters={[...filters, {name:"None", id:""}]} filterBy={filterBy} onSelect={setGnomeFilterBy}/>
 			<ul>		
 				<Paginator elements={gnomes} elementItem={GnomeItem}/>
 			</ul>

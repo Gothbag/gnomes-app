@@ -23,10 +23,8 @@ const filter = (state = {}, action) => {
 			if (state.value === action.value) {
 				return state;
 			}
-			console.log({...state, value: action.value})
 			return {...state, value: action.value};
 		case listActions.SET_LIST_FILTER_BY:
-			console.log({...state, filterBy: action.filterBy})
 			return {...state, filterBy: action.filterBy};
 		default:
 			return state;
