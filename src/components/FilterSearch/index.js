@@ -21,15 +21,19 @@ class FilterSearch extends React.PureComponent {
     onSelect: noop
   }
 
-
   prepareFilter = filter => (<MenuItem key={filter.id} onSelect={this.handleOnSelect(filter.id)} active={filter.id === this.props.filterBy}>{filter.name}</MenuItem>);
 
   handleOnSelect = id => () => this.props.onSelect(id);
 
   handleOnChange = event => {
     event.persist();
-    debounce(() => this.props.onChange(event.target.value), 1000)();
+    this.debouncedOnChange(event);
   }
+
+  debouncedOnChange = debounce(event => {
+    event.persist();
+    this.props.onChange(event.target.value)
+  }, 1000);
 
   getFilterName = () => {
     const { props: { defaultTitle, filters, filterBy } } = this;
